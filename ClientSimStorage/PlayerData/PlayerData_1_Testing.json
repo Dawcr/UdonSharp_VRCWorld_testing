@@ -1,26 +1,26 @@
 {
   "Wood": {
-    "LastUpdated": "2026-06-30T13:11:08.882948+02:00",
+    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
     "Key": "Wood",
     "Value": {
       "type": "Int",
-      "value": 49
+      "value": 50
     }
   },
   "Stone": {
-    "LastUpdated": "2026-06-29T17:38:29.4838983+02:00",
+    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
     "Key": "Stone",
     "Value": {
       "type": "Int",
-      "value": 13
+      "value": 14
     }
   },
   "TotalExperience": {
-    "LastUpdated": "2026-06-30T13:11:08.882948+02:00",
+    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
     "Key": "TotalExperience",
     "Value": {
       "type": "Int",
-      "value": 36
+      "value": 38
     }
   }
 }
