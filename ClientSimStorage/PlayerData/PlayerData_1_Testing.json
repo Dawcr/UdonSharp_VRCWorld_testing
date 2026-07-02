@@ -1,34 +1,34 @@
 {
   "Wood": {
-    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
+    "LastUpdated": "2026-07-02T16:13:00.1305764+02:00",
     "Key": "Wood",
     "Value": {
       "type": "Int",
-      "value": 50
+      "value": 52
     }
   },
   "Stone": {
-    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
+    "LastUpdated": "2026-07-01T11:33:24.6046644+02:00",
     "Key": "Stone",
     "Value": {
       "type": "Int",
-      "value": 14
+      "value": 15
     }
   },
   "TotalExperience": {
-    "LastUpdated": "2026-06-30T16:37:25.3380805+02:00",
+    "LastUpdated": "2026-07-02T16:13:00.1305764+02:00",
     "Key": "TotalExperience",
     "Value": {
       "type": "Int",
-      "value": 38
+      "value": 41
     }
   },
   "WorldTiles": {
-    "LastUpdated": "2026-06-30T19:16:01.9237804+02:00",
+    "LastUpdated": "2026-07-02T16:04:34.4284883+02:00",
     "Key": "WorldTiles",
     "Value": {
       "type": "Bytes",
-      "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+      "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
     }
   }
 }

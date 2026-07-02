@@ -4,7 +4,6 @@ using UnityEngine;
 using VRC.SDK3.Components;
 using VRC.SDK3.Persistence;
 using VRC.SDKBase;
-using VRC.Udon.Common.Interfaces;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class PlayerInventory : UdonSharpBehaviour
@@ -71,7 +70,7 @@ public class PlayerInventory : UdonSharpBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!Networking.IsOwner(other.gameObject)) return;
+        //if (!Networking.IsOwner(other.gameObject)) return;
         
         PlayerWorkerUnit worker = other.GetComponent<PlayerWorkerUnit>();
         if (worker == null) return;

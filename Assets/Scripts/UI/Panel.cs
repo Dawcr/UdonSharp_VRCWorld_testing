@@ -1,14 +1,13 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
-using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class Panel : UdonSharpBehaviour
 {
     [SerializeField] private TMP_Text resourcesDescription;
+    [SerializeField] private TMP_Text currentOwnerDescription;
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private GatherableResourceData gatherableResourceData;
     [SerializeField] private GameObject resourcesTab;
@@ -16,7 +15,12 @@ public class Panel : UdonSharpBehaviour
     
     private PlayerWorkerUnit _playerWorker;
     private bool _showShopTab;
-    
+
+    public override void OnOwnershipTransferred(VRCPlayerApi player)
+    {
+        UpdateOwnerDescription();
+    }
+
     // not sure how to trigger an update when panel is activated so using this for now
     public void UpdateResourcesDescription()
     {
@@ -39,6 +43,11 @@ public class Panel : UdonSharpBehaviour
         UpdateActiveTab();
     }
 
+    private void UpdateOwnerDescription()
+    {
+        currentOwnerDescription.text = $"Current Owner: {Networking.GetOwner(gameObject).displayName}";
+    }
+
     private void UpdateActiveTab()
     {
         resourcesTab.SetActive(!_showShopTab);
@@ -48,6 +57,7 @@ public class Panel : UdonSharpBehaviour
     private void Start()
     {
         UpdateResourcesDescription();
+        UpdateOwnerDescription();
         GameObject[] playerObjects = Networking.GetPlayerObjects(Networking.LocalPlayer);
         foreach (GameObject playerObject in playerObjects)
         {

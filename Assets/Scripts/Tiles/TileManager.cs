@@ -2,7 +2,6 @@
 using UnityEngine;
 using VRC.SDK3.Persistence;
 using VRC.SDKBase;
-using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class TileManager : UdonSharpBehaviour
@@ -24,13 +23,14 @@ public class TileManager : UdonSharpBehaviour
     private float _startingZLocation;
     private float _worldScaleX;
     private float _worldScaleZ;
+    // is this necessary here?
     private bool _restoreComplete;
     
     public override void OnPlayerRestored(VRCPlayerApi player)
     {
-        if (!Networking.IsOwner(gameObject)) return;
+        if (!player.isLocal) return;
 
-        SetWorldTiles(player);
+        SetWorldTiles(Networking.GetOwner(gameObject));
         SpawnInTiles();
         _restoreComplete = true;
     }
@@ -42,8 +42,6 @@ public class TileManager : UdonSharpBehaviour
 
     public void ChangeTile(int tileIndex, TileType tileType)
     {
-        if (!Networking.IsOwner(gameObject)) return;
-        
         _worldTiles[tileIndex] = (byte)tileType;
         ChangeTilePrefab(tileIndex, (byte)tileType);
         SaveTiles();
@@ -56,6 +54,7 @@ public class TileManager : UdonSharpBehaviour
         {
             if (_localTiles[i] != _worldTiles[i])
             {
+                Debug.Log($"Changing tile at index {i}");
                 _localTiles[i] = _worldTiles[i];
                 ChangeTilePrefab(i, _worldTiles[i]);
             }
@@ -83,6 +82,8 @@ public class TileManager : UdonSharpBehaviour
             Debug.Log("No playerData recovered");
             _worldTiles = new byte[_maxTiles];
         }
+
+        _worldTiles.CopyTo(_localTiles, 0);
         RequestSerialization();
     }
 
@@ -112,8 +113,8 @@ public class TileManager : UdonSharpBehaviour
         
         _localTiles = new byte[_maxTiles];
         _worldTilesGameObjects = new GameObject[_maxTiles];
-}
-
+    }
+    
     private void SpawnInTiles()
     {
         Debug.Log("Spawning tiles");
@@ -126,6 +127,11 @@ public class TileManager : UdonSharpBehaviour
                 GameObject tileToSpawn = GetTile(_worldTiles[index]);
                 GameObject spawnedTile = Instantiate(tileToSpawn, location, Quaternion.identity);
                 _worldTilesGameObjects[index] = spawnedTile.gameObject;
+                Tile newTile = spawnedTile.GetComponent<Tile>();
+                if (newTile != null)
+                {
+                    newTile.Init(this, index);
+                }
             }
         }
     }
@@ -133,6 +139,7 @@ public class TileManager : UdonSharpBehaviour
     private void SaveTiles()
     {
         if (!_restoreComplete) return;
+        if (!Networking.IsOwner(gameObject)) return;
         
         PlayerData.SetBytes(WorldTilesStringName, _worldTiles);
         Debug.Log("Tiles saved");

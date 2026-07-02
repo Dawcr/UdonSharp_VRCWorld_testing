@@ -1,20 +1,33 @@
-﻿using System;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 
+[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class Tile : UdonSharpBehaviour
 {
     [SerializeField] private TileType tileType;
+    private TileManager _tileManager;
+    private int _index;
 
-    private void OnTriggerEnter(Collider other)
+    public void Init(TileManager tileManager, int index)
     {
-        TileChanger newTile = other.GetComponent<TileChanger>();
-        if (newTile == null) return;
-        // avoid changing if this tile already has content and new would replace it
-        if (tileType != TileType.None && newTile.TargetTile != TileType.None) return;
+        _tileManager = tileManager;
+        _index = index;
+    }
+    
+    public bool TryChangeTileType(TileType newTileType)
+    {
+        if (newTileType == tileType) return false;
+        if (tileType != TileType.None && newTileType != TileType.None) return false;
         
+        tileType = newTileType;
+        SendCustomEventDelayedFrames(nameof(GetReplaced), 0);
+        return true;
+    }
+
+    public void GetReplaced()
+    {
+        if (_tileManager == null) return;
         
+        _tileManager.ChangeTile(_index, tileType);
     }
 }
