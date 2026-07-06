@@ -1,6 +1,8 @@
-﻿using UdonSharp;
+﻿using System;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Components;
+using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
@@ -10,10 +12,11 @@ public class TileChanger : UdonSharpBehaviour
     [SerializeField] private GameObject box;
     [SerializeField] private GameObject spawner;
     [SerializeField] private VRC_Pickup pickup;
+    [SerializeField] private Rigidbody rb;
 
     [UdonSynced] private bool _active;
     private VRCPlayerApi _currentMasterPlayer;
-    private Vector3 _startingPosition;
+    private readonly Vector3 _startingPosition = new Vector3(0, -20, 0);
 
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
@@ -42,10 +45,24 @@ public class TileChanger : UdonSharpBehaviour
         transform.position = location.position;
     }
 
+    [NetworkCallable]
+    public void Respawn()
+    {
+        _active = false;
+        UpdateActiveState();
+        pickup.Drop();
+        transform.position = _startingPosition;
+        if (rb == null) // am I missing something? why is this needed
+        {
+            rb = GetComponent<Rigidbody>();
+        }
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
     private void Awake()
     {
-        _startingPosition = transform.position;
-        gameObject.SetActive(false);
+        transform.position = _startingPosition;
     }
 
     private void Start()
@@ -61,14 +78,14 @@ public class TileChanger : UdonSharpBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!_active) return;
+        if (!Networking.IsOwner(gameObject)) return;
         
         Tile tile = other.GetComponent<Tile>();
         if (tile == null) return;
 
         if (tile.TryChangeTileType(TargetTile))
         {
-            transform.position = _startingPosition;
-            VRCTween.DelayedSetActive(gameObject, false, 2f);
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(Respawn));
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using UdonSharp;
+﻿using TMPro;
+using UdonSharp;
 using UnityEngine;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]

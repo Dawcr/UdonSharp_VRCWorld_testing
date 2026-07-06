@@ -45,7 +45,9 @@ public class Panel : UdonSharpBehaviour
 
     private void UpdateOwnerDescription()
     {
-        currentOwnerDescription.text = $"Current Owner: {Networking.GetOwner(gameObject).displayName}";
+        VRCPlayerApi owner = Networking.GetOwner(gameObject);
+        string local = owner.isLocal ? "(YOU!)" : "";
+        currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local}";
     }
 
     private void UpdateActiveTab()

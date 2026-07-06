@@ -21,7 +21,6 @@ public class Shop : UdonSharpBehaviour
     
     private void SpawnTileChanger(TileType tileType)
     {
-        tileChanger.SetActive(true);
         TileChanger changer = tileChanger.GetComponent<TileChanger>();
         if (changer != null)
         {

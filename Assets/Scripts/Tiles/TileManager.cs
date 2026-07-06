@@ -1,6 +1,7 @@
 ﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Persistence;
+using VRC.SDK3.UdonNetworkCalling;
 using VRC.SDKBase;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
@@ -43,11 +44,34 @@ public class TileManager : UdonSharpBehaviour
     public void ChangeTile(int tileIndex, TileType tileType)
     {
         _worldTiles[tileIndex] = (byte)tileType;
-        ChangeTilePrefab(tileIndex, (byte)tileType);
-        SaveTiles();
         RequestSerialization();
+        //ChangeTilePrefab(tileIndex, tileType);
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(ChangeTilePrefab), tileIndex, (byte)tileType);
+        SaveTiles();
     }
 
+    [NetworkCallable]
+    public void ChangeTilePrefab(int tileIndex, byte tileType)
+    {
+        if (_worldTilesGameObjects[tileIndex] == null)
+        {
+            Debug.Log("Tile not found");
+            return;
+        }
+        
+        Vector3 tilePosition = _worldTilesGameObjects[tileIndex].transform.position;
+        Destroy(_worldTilesGameObjects[tileIndex]);
+        GameObject newTileTypeToSpawn = GetTile(tileType);
+        GameObject spawnedTile = Instantiate(newTileTypeToSpawn, tilePosition, Quaternion.identity);
+        _worldTilesGameObjects[tileIndex] = spawnedTile;
+        Tile tile = spawnedTile.GetComponent<Tile>();
+        if (tile != null)
+        {
+            tile.Init(this, tileIndex);
+        }
+    }
+    
+    /*
     public override void OnDeserialization()
     {
         for (int i = 0; i < _maxXTiles; i++)
@@ -60,20 +84,7 @@ public class TileManager : UdonSharpBehaviour
             }
         }
     }
-
-    private void ChangeTilePrefab(int tileIndex, byte tileType)
-    {
-        if (_worldTilesGameObjects[tileIndex] == null)
-        {
-            Debug.Log("Tile not found");
-            return;
-        }
-        
-        Vector3 tilePosition = _worldTilesGameObjects[tileIndex].transform.position;
-        Destroy(_worldTilesGameObjects[tileIndex]);
-        GameObject newTile = GetTile(tileType);
-        _worldTilesGameObjects[tileIndex] = Instantiate(newTile, tilePosition, Quaternion.identity);
-    }
+    */
 
     private void SetWorldTiles(VRCPlayerApi player)
     {
