@@ -1105,10 +1105,12 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 1901952275764193115}
   resourcesDescription: {fileID: 1658862119268456380}
+  currentOwnerDescription: {fileID: 0}
   playerInventory: {fileID: 0}
-  gatherableResourceData: {fileID: 0}
   resourcesTab: {fileID: 3871184543729908542}
   shopTab: {fileID: 6795700197320246103}
+  activeOnlyForOwner: []
+  inactiveOnlyForOwner: []
 --- !u!114 &1901952275764193115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1128,7 +1130,7 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 1
+  _syncMethod: 3
   serializedProgramAsset: {fileID: 11400000, guid: 6fe8017526997aa46aae115d11160170,
     type: 2}
   programSource: {fileID: 11400000, guid: a7fd44bdd5b91d2429d0d4059c0f6edd, type: 2}
