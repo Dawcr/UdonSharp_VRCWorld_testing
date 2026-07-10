@@ -9,10 +9,10 @@ public class Panel : UdonSharpBehaviour
     [SerializeField] private TMP_Text resourcesDescription;
     [SerializeField] private TMP_Text currentOwnerDescription;
     [SerializeField] private PlayerInventory playerInventory;
-    [SerializeField] private GatherableResourceData gatherableResourceData;
     [SerializeField] private GameObject resourcesTab;
     [SerializeField] private GameObject shopTab;
-    [SerializeField] private GameObject donationTab;
+    [SerializeField] private GameObject[] activeOnlyForOwner;
+    [SerializeField] private GameObject[] inactiveOnlyForOwner;
     
     private PlayerWorkerUnit _playerWorker;
     private bool _showShopTab;
@@ -30,12 +30,12 @@ public class Panel : UdonSharpBehaviour
 
     public void SetGatherLocationWood()
     {
-        _playerWorker.SetGatherTarget(gatherableResourceData.GetResourceLocation(GatherableResourceType.Wood));
+        _playerWorker.GoGather(GatherableResourceType.Wood);
     }
 
     public void SetGatherLocationStone()
     {
-        _playerWorker.SetGatherTarget(gatherableResourceData.GetResourceLocation(GatherableResourceType.Stone));
+        _playerWorker.GoGather(GatherableResourceType.Stone);
     }
 
     public void Donate10Wood()
@@ -59,11 +59,18 @@ public class Panel : UdonSharpBehaviour
     private void UpdateOwnership()
     {
         VRCPlayerApi owner = Networking.GetOwner(gameObject);
-        string local = owner.isLocal ? "(YOU!)" : "";
+        string local = owner.isLocal ? "(YOU!)" : "(Not you)";
         VRCPlayerApi inventoryOwner = Networking.GetOwner(playerInventory.gameObject);
-        string inventoryLocal = inventoryOwner.isLocal ? "YES" : "NO";
-        currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local} Inventory Owner: {inventoryOwner.displayName} Inventory Local: {inventoryLocal}";
-        donationTab.gameObject.SetActive(!owner.isLocal);
+        string inventoryLocal = inventoryOwner.isLocal ? "(YOU!)" : "(Not you)";
+        currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local}\nInventory Owner: {inventoryOwner.displayName}{inventoryLocal}";
+        foreach (GameObject obj in activeOnlyForOwner)
+        {
+            obj.SetActive(owner.isLocal);
+        }
+        foreach (GameObject obj in inactiveOnlyForOwner)
+        {
+            obj.SetActive(!owner.isLocal);
+        }
     }
 
     private void UpdateActiveTab()

@@ -11,9 +11,8 @@ public class TileManager : UdonSharpBehaviour
     [SerializeField] private GameObject baseTilePrefab;
     [SerializeField] private GameObject grassyWoodenBenchPrefab;
 
-    [UdonSynced] private byte[] _worldTiles;
-    private GameObject[] _worldTilesGameObjects;
-    private byte[] _localTiles;
+    [UdonSynced] private byte[] _worldTilesType;
+    private Tile[] _worldTilesObject;
     private const string WorldTilesStringName = "WorldTiles";
     private int _maxXTiles;
     private int _maxZTiles;
@@ -30,10 +29,30 @@ public class TileManager : UdonSharpBehaviour
     public override void OnPlayerRestored(VRCPlayerApi player)
     {
         if (!player.isLocal) return;
-
-        SetWorldTiles(Networking.GetOwner(gameObject));
+        
+        SetWorldTiles();
         SpawnInTiles();
         _restoreComplete = true;
+    }
+    
+    public override void OnOwnershipTransferred(VRCPlayerApi player)
+    {
+        foreach (Tile tile in _worldTilesObject)
+        {
+            if (tile != null)
+            {
+                Destroy(tile.gameObject);
+            }
+        }
+
+        if (!player.isLocal)
+        {
+            SendCustomEventDelayedSeconds(nameof(SpawnInTiles), 5f);
+            return;
+        }
+        
+        SetWorldTiles();
+        SpawnInTiles();
     }
 
     public override void OnPlayerJoined(VRCPlayerApi player)
@@ -43,9 +62,8 @@ public class TileManager : UdonSharpBehaviour
 
     public void ChangeTile(int tileIndex, TileType tileType)
     {
-        _worldTiles[tileIndex] = (byte)tileType;
+        _worldTilesType[tileIndex] = (byte)tileType;
         RequestSerialization();
-        //ChangeTilePrefab(tileIndex, tileType);
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(ChangeTilePrefab), tileIndex, (byte)tileType);
         SaveTiles();
     }
@@ -53,49 +71,43 @@ public class TileManager : UdonSharpBehaviour
     [NetworkCallable]
     public void ChangeTilePrefab(int tileIndex, byte tileType)
     {
-        if (_worldTilesGameObjects[tileIndex] == null)
+        if (_worldTilesObject[tileIndex] == null)
         {
             Debug.Log("Tile not found");
             return;
         }
         
-        Vector3 tilePosition = _worldTilesGameObjects[tileIndex].transform.position;
-        Destroy(_worldTilesGameObjects[tileIndex]);
+        Vector3 tilePosition = _worldTilesObject[tileIndex].transform.position;
+        Destroy(_worldTilesObject[tileIndex].gameObject);
         GameObject newTileTypeToSpawn = GetTile(tileType);
         GameObject spawnedTile = Instantiate(newTileTypeToSpawn, tilePosition, Quaternion.identity);
-        _worldTilesGameObjects[tileIndex] = spawnedTile;
         Tile tile = spawnedTile.GetComponent<Tile>();
+        _worldTilesObject[tileIndex] = tile;
         if (tile != null)
         {
             tile.Init(this, tileIndex);
         }
     }
     
-    /*
-    public override void OnDeserialization()
+    public void SpawnInTiles()
     {
-        for (int i = 0; i < _maxXTiles; i++)
+        Debug.Log("Spawning tiles");
+        for (int x = 0; x < _maxXTiles; x++)
         {
-            if (_localTiles[i] != _worldTiles[i])
+            for (int z = 0; z < _maxZTiles; z++)
             {
-                Debug.Log($"Changing tile at index {i}");
-                _localTiles[i] = _worldTiles[i];
-                ChangeTilePrefab(i, _worldTiles[i]);
+                Vector3 location = new Vector3(_startingXLocation - x * _tileXSize, 0, _startingZLocation - z * _tileZSize);
+                int index = (x * _maxZTiles) + z;
+                GameObject tileToSpawn = GetTile(_worldTilesType[index]);
+                GameObject spawnedTile = Instantiate(tileToSpawn, location, Quaternion.identity);
+                Tile newTile = spawnedTile.GetComponent<Tile>();
+                _worldTilesObject[index] = newTile;
+                if (newTile != null)
+                {
+                    newTile.Init(this, index);
+                }
             }
         }
-    }
-    */
-
-    private void SetWorldTiles(VRCPlayerApi player)
-    {
-        if (!PlayerData.TryGetBytes(player, WorldTilesStringName, out _worldTiles))
-        {
-            Debug.Log("No playerData recovered");
-            _worldTiles = new byte[_maxTiles];
-        }
-
-        _worldTiles.CopyTo(_localTiles, 0);
-        RequestSerialization();
     }
 
     private void Start()
@@ -122,29 +134,20 @@ public class TileManager : UdonSharpBehaviour
         
         Debug.Log($"Starting locations at {_startingXLocation}, {_startingZLocation}");
         
-        _localTiles = new byte[_maxTiles];
-        _worldTilesGameObjects = new GameObject[_maxTiles];
+        _worldTilesObject = new Tile[_maxTiles];
     }
-    
-    private void SpawnInTiles()
+
+    private void SetWorldTiles()
     {
-        Debug.Log("Spawning tiles");
-        for (int x = 0; x < _maxXTiles; x++)
+        VRCPlayerApi owner = Networking.GetOwner(gameObject);
+        if (!owner.isLocal) return;
+        
+        if (!PlayerData.TryGetBytes(owner, WorldTilesStringName, out _worldTilesType))
         {
-            for (int z = 0; z < _maxZTiles; z++)
-            {
-                Vector3 location = new Vector3(_startingXLocation - x * _tileXSize, 0, _startingZLocation - z * _tileZSize);
-                int index = (x * _maxZTiles) + z;
-                GameObject tileToSpawn = GetTile(_worldTiles[index]);
-                GameObject spawnedTile = Instantiate(tileToSpawn, location, Quaternion.identity);
-                _worldTilesGameObjects[index] = spawnedTile.gameObject;
-                Tile newTile = spawnedTile.GetComponent<Tile>();
-                if (newTile != null)
-                {
-                    newTile.Init(this, index);
-                }
-            }
+            Debug.Log("No playerData recovered");
+            _worldTilesType = new byte[_maxTiles];
         }
+        RequestSerialization();
     }
 
     private void SaveTiles()
@@ -152,7 +155,7 @@ public class TileManager : UdonSharpBehaviour
         if (!_restoreComplete) return;
         if (!Networking.IsOwner(gameObject)) return;
         
-        PlayerData.SetBytes(WorldTilesStringName, _worldTiles);
+        PlayerData.SetBytes(WorldTilesStringName, _worldTilesType);
         Debug.Log("Tiles saved");
     }
 

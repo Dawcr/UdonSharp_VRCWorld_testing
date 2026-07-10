@@ -1149,7 +1149,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &691173133
 MeshFilter:
@@ -1607,7 +1607,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1188631203
 MeshFilter:
@@ -2553,6 +2553,11 @@ PrefabInstance:
       objectReference: {fileID: 1446424649}
     - target: {fileID: 655655840708080840, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
+      propertyPath: gatherableResourceData
+      value: 
+      objectReference: {fileID: 1910567170}
+    - target: {fileID: 655655840708080840, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
       propertyPath: inventoryStorageLocation
       value: 
       objectReference: {fileID: 1446424647}
@@ -2564,8 +2569,13 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
+      propertyPath: m_Drag
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
       propertyPath: m_AngularDrag
-      value: 0
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
@@ -2635,6 +2645,11 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 7853658943987012124, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
+      propertyPath: m_Radius
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7853658943987012124, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
       propertyPath: m_Acceleration
       value: 20
       objectReference: {fileID: 0}
@@ -2642,6 +2657,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AngularSpeed
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7853658943987012124, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 9156065884227318471, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
@@ -3100,6 +3120,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5678860152218700340, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
+    - target: {fileID: 6148382162401611287, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6776314505173029100, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
       propertyPath: tileChanger
@@ -3272,13 +3297,13 @@ MonoBehaviour:
   useAssignedLayers: 0
   DynamicPrefabs: []
   DynamicMaterials:
+  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
   - {fileID: 2100000, guid: 2608c9140e5b81843aa967c2cd12a2a9, type: 2}
   - {fileID: 2100000, guid: 5598a53554c28954d8689549c0db2289, type: 2}
-  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
   - {fileID: 2100000, guid: dc4fa4a233f3b0d4eb9ed6854866a44c, type: 2}
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
-  - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
   LightMapsNear: []
   LightMapsFar: []
   LightMode: 0

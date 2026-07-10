@@ -11,6 +11,7 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     [SerializeField] private PlayerInventory inventory;
     [SerializeField] private Transform inventoryStorageLocation;
     [SerializeField] private float gatherTimeMultiplier = 1f;
+    [SerializeField] private GatherableResourceData gatherableResourceData;
     private NavMeshAgent _agent;
     private TMP_Text _playerName;
     private GatherableResourceType _gatheredResource;
@@ -20,13 +21,10 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     // I'm not sure if I'll want it to be incremental
     private const int GatheredResourceAmount = 1;
 
-
-    public void SetGatherTarget(Transform target)
+    public void GoGather(GatherableResourceType resourceType)
     {
-        if (!Networking.IsOwner(gameObject)) return;
-        _gatherTarget = target;
-        // should player be allowed to discard held resource?
-        SetTarget(_isHoldingResource ? inventoryStorageLocation : target);
+        _gatherTarget = gatherableResourceData.GetResourceLocation(resourceType);
+        SetTarget(_isHoldingResource ? inventoryStorageLocation : _gatherTarget);
     }
     
     // there must be a better way to do this..?
@@ -63,6 +61,7 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _playerName = GetComponentInChildren<TMP_Text>();
         _playerName.text = Networking.GetOwner(gameObject).displayName;
+        _agent.SetDestination(transform.position);
     }
     
     private void SetTarget(Transform target)
@@ -71,6 +70,9 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
         {
             _gatherOperation.Kill();
         }
-        _agent.SetDestination(target.position);
+        if (target != null)
+        {
+            _agent.SetDestination(target.position);
+        }
     }
 }

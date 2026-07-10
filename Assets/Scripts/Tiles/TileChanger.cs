@@ -15,7 +15,6 @@ public class TileChanger : UdonSharpBehaviour
     [SerializeField] private Rigidbody rb;
 
     [UdonSynced] private bool _active;
-    private VRCPlayerApi _currentMasterPlayer;
     private readonly Vector3 _startingPosition = new Vector3(0, -20, 0);
 
     public override void OnPlayerJoined(VRCPlayerApi player)
@@ -33,6 +32,11 @@ public class TileChanger : UdonSharpBehaviour
         _active = !_active;
         RequestSerialization();
         UpdateActiveState();
+    }
+
+    public override void OnOwnershipTransferred(VRCPlayerApi player)
+    {
+        pickup.pickupable = player.isLocal;
     }
 
     public void Init(VRCPlayerApi currentMasterPlayer, TileType targetTile, Transform location)
@@ -63,16 +67,6 @@ public class TileChanger : UdonSharpBehaviour
     private void Awake()
     {
         transform.position = _startingPosition;
-    }
-
-    private void Start()
-    {
-        if (_currentMasterPlayer == null)
-        {
-            _currentMasterPlayer = Networking.GetOwner(gameObject);
-        }
-
-        pickup.pickupable = _currentMasterPlayer.isLocal;
     }
 
     private void OnTriggerEnter(Collider other)
