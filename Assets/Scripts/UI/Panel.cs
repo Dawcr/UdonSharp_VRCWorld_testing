@@ -61,8 +61,8 @@ public class Panel : UdonSharpBehaviour
         VRCPlayerApi owner = Networking.GetOwner(gameObject);
         string local = owner.isLocal ? "(YOU!)" : "";
         VRCPlayerApi inventoryOwner = Networking.GetOwner(playerInventory.gameObject);
-        string inventoryLocal = inventoryOwner.isLocal ? "(YOU!)" : "";
-        currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local} Inventory Owner: {inventoryOwner} Inventory Local: {inventoryLocal}";
+        string inventoryLocal = inventoryOwner.isLocal ? "YES" : "NO";
+        currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local} Inventory Owner: {inventoryOwner.displayName} Inventory Local: {inventoryLocal}";
         donationTab.gameObject.SetActive(!owner.isLocal);
     }
 

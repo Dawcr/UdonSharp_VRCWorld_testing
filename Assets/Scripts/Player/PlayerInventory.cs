@@ -59,6 +59,21 @@ public class PlayerInventory : UdonSharpBehaviour
         return true;
     }
 
+    public bool TryToPay(int[] resources)
+    {
+        for (int i = 0; i < resources.Length; i++)
+        {
+            if (_gatheredResources[i] < resources[i]) return false;
+        }
+
+        for (int i = 0; i < resources.Length; i++)
+        {
+            TryRemoveItems((GatherableResourceType)i, resources[i], 0);
+        }
+        
+        return true;
+    }
+
     public void DonateItems(GatherableResourceType resource, int amount, VRCPlayerApi targetPlayer)
     {
         int expFromDonation = amount * ExperiencePerDonation;

@@ -8,14 +8,20 @@ using VRC.SDKBase;
 public class Shop : UdonSharpBehaviour
 {
     [SerializeField] private GameObject tileChanger;
+    [SerializeField] private PlayerInventory playerInventory;
 
+    private readonly int[] _tileDestroyerPrice = { 1, 1 };
+    private readonly int[] _testTilePrice = { 10, 5 };
+    
     public void SpawnTileDestroyer()
     {
+        if (!playerInventory.TryToPay(_tileDestroyerPrice)) return;
         SpawnTileChanger(TileType.None);
     }
 
     public void SpawnTestTile()
     {
+        if (!playerInventory.TryToPay(_testTilePrice)) return;
         SpawnTileChanger(TileType.GrassyWoodenBench);
     }
     
@@ -26,5 +32,9 @@ public class Shop : UdonSharpBehaviour
         {
             changer.Init(Networking.GetOwner(gameObject), tileType, transform);
         }
+    }
+
+    private void Awake()
+    {
     }
 }

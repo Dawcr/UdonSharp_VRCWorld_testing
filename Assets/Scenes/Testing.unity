@@ -502,18 +502,6 @@ PrefabInstance:
       addedObject: {fileID: 941289162977643107}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d6d0819c573c1046b26676a28573fc3, type: 3}
---- !u!114 &259374726 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2272619103914417303, guid: 5b99858628901b34db4f466380c9dfc1,
-    type: 3}
-  m_PrefabInstance: {fileID: 6914507898172100650}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &299310439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,7 +1756,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1422503085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2574,6 +2562,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 655655840708080840, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
+    - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 84
+      objectReference: {fileID: 0}
+    - target: {fileID: 4079819545381644135, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6283333836541388335, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2630,6 +2633,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6361969909587073424, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
+    - target: {fileID: 7853658943987012124, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7853658943987012124, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: m_AngularSpeed
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 9156065884227318471, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
       propertyPath: m_Name
@@ -3051,30 +3064,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 738625712}
     m_Modifications:
-    - target: {fileID: 1206605615208723406, guid: 5b99858628901b34db4f466380c9dfc1,
+    - target: {fileID: 442198962807787806, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
-      propertyPath: _syncMethod
-      value: 3
+      propertyPath: m_SizeDelta.x
+      value: 110
       objectReference: {fileID: 0}
-    - target: {fileID: 1333756991953866042, guid: 5b99858628901b34db4f466380c9dfc1,
+    - target: {fileID: 442198962807787806, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      propertyPath: m_SizeDelta.y
+      value: -49.995003
       objectReference: {fileID: 0}
-    - target: {fileID: 1333756991953866042, guid: 5b99858628901b34db4f466380c9dfc1,
+    - target: {fileID: 442198962807787806, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 259374726}
-    - target: {fileID: 1333756991953866042, guid: 5b99858628901b34db4f466380c9dfc1,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
-      value: 1
+      propertyPath: m_AnchoredPosition.y
+      value: 25.0025
       objectReference: {fileID: 0}
-    - target: {fileID: 2272619103914417303, guid: 5b99858628901b34db4f466380c9dfc1,
+    - target: {fileID: 795109369168970026, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      propertyPath: m_text
+      value: Spawn Remover (1w, 1s)
       objectReference: {fileID: 0}
     - target: {fileID: 5678860152218700340, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
@@ -3092,11 +3100,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5678860152218700340, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
-    - target: {fileID: 6148382162401611287, guid: 5b99858628901b34db4f466380c9dfc1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6776314505173029100, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
       propertyPath: tileChanger
@@ -3104,19 +3107,24 @@ PrefabInstance:
       objectReference: {fileID: 1904097796}
     - target: {fileID: 6776314505173029100, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
+      propertyPath: playerInventory
+      value: 
+      objectReference: {fileID: 1446424649}
+    - target: {fileID: 6776314505173029100, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6776314505173029100, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
+    - target: {fileID: 6988491760202706128, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 7546938991929555279, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
       propertyPath: m_Name
       value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7571328249888468828, guid: 5b99858628901b34db4f466380c9dfc1,
-        type: 3}
-      propertyPath: _syncMethod
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7936337976848886713, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
@@ -3264,12 +3272,12 @@ MonoBehaviour:
   useAssignedLayers: 0
   DynamicPrefabs: []
   DynamicMaterials:
-  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
-  - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
-  - {fileID: 2100000, guid: dc4fa4a233f3b0d4eb9ed6854866a44c, type: 2}
   - {fileID: 2100000, guid: 2608c9140e5b81843aa967c2cd12a2a9, type: 2}
   - {fileID: 2100000, guid: 5598a53554c28954d8689549c0db2289, type: 2}
+  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
+  - {fileID: 2100000, guid: dc4fa4a233f3b0d4eb9ed6854866a44c, type: 2}
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
   - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
   LightMapsNear: []
   LightMapsFar: []
