@@ -11,11 +11,12 @@ public class Panel : UdonSharpBehaviour
     [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private GameObject resourcesTab;
     [SerializeField] private GameObject shopTab;
+    [SerializeField] private GameObject ownershipTab;
     [SerializeField] private GameObject[] activeOnlyForOwner;
     [SerializeField] private GameObject[] inactiveOnlyForOwner;
     
     private PlayerWorkerUnit _playerWorker;
-    private bool _showShopTab;
+    private PanelTabType _currentTab = PanelTabType.Gather;
 
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
@@ -52,7 +53,22 @@ public class Panel : UdonSharpBehaviour
 
     public void SwitchTab()
     {
-        _showShopTab = !_showShopTab;
+        switch (_currentTab)
+        {
+            case PanelTabType.Gather:
+                _currentTab = PanelTabType.Shop;
+                break;
+            case PanelTabType.Shop:
+                _currentTab = PanelTabType.Owner;
+                break;
+            case PanelTabType.Owner:
+                _currentTab = PanelTabType.Gather;
+                break;
+            default:
+                _currentTab = PanelTabType.Gather;
+                break;
+        }
+        
         UpdateActiveTab();
     }
     
@@ -95,8 +111,9 @@ public class Panel : UdonSharpBehaviour
 
     private void UpdateActiveTab()
     {
-        resourcesTab.SetActive(!_showShopTab);
-        shopTab.SetActive(_showShopTab);
+        resourcesTab.SetActive(_currentTab == PanelTabType.Gather);
+        shopTab.SetActive(_currentTab == PanelTabType.Shop);
+        ownershipTab.SetActive(_currentTab == PanelTabType.Owner);
     }
 
     private void RetrievePlayerWorker()

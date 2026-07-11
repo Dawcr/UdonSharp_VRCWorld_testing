@@ -1089,6 +1089,12 @@ MonoBehaviour:
   m_Script: {fileID: 1658641376, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &536058536 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2315482762272060633, guid: 2750f8886ad49234b8bc6c14062303a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3645850635208836262}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &542591763
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3283,6 +3289,16 @@ PrefabInstance:
       propertyPath: _syncMethod
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2324658422652266592, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4520502753156755742, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: _syncMethod
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5678860152218700340, guid: 5b99858628901b34db4f466380c9dfc1,
         type: 3}
       propertyPath: playerInventory
@@ -3420,6 +3436,62 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[0]
+      value: 
+      objectReference: {fileID: 536058536}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 2081863842}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[2]
+      value: 
+      objectReference: {fileID: 337050453}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[3]
+      value: 
+      objectReference: {fileID: 1446424646}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[4]
+      value: 
+      objectReference: {fileID: 1910567168}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[5]
+      value: 
+      objectReference: {fileID: 1661947761}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[6]
+      value: 
+      objectReference: {fileID: 299310439}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[7]
+      value: 
+      objectReference: {fileID: 1904097796}
+    - target: {fileID: 8397230837212218588, guid: 5b99858628901b34db4f466380c9dfc1,
+        type: 3}
+      propertyPath: trackedObjects.Array.data[8]
+      value: 
+      objectReference: {fileID: 623584908106180565}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3466,12 +3538,12 @@ MonoBehaviour:
   useAssignedLayers: 0
   DynamicPrefabs: []
   DynamicMaterials:
+  - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
   - {fileID: 2100000, guid: 2608c9140e5b81843aa967c2cd12a2a9, type: 2}
   - {fileID: 2100000, guid: 5598a53554c28954d8689549c0db2289, type: 2}
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
-  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
   - {fileID: 2100000, guid: dc4fa4a233f3b0d4eb9ed6854866a44c, type: 2}
+  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
   LightMapsNear: []
   LightMapsFar: []
@@ -3566,6 +3638,7 @@ MonoBehaviour:
   - gameObject: {fileID: 623584908106180565}
     ID: 18
     SerializedTypeNames:
+    - VRC.Udon.UdonBehaviour
     - VRC.Udon.UdonBehaviour
     - VRC.Udon.UdonBehaviour
   - gameObject: {fileID: 569949630}
