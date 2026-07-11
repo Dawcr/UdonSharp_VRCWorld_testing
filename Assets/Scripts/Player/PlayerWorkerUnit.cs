@@ -31,6 +31,7 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     public void ReceiveResource(GatherableResourceType resource, float gatherTime)
     {
         if (!Networking.IsOwner(gameObject)) return;
+        
         float finalGatherTime = gatherTime * gatherTimeMultiplier;
         _gatheredResource = resource;
         Debug.Log($"Starting to gather {GatherableResourceTypeExtensions.GetName(_gatheredResource)}");
@@ -40,6 +41,7 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     public void StoreCurrentResource()
     {
         if (!Networking.IsOwner(gameObject)) return;
+        
         _isHoldingResource = true;
         Debug.Log("Walking to storage");
         SetTarget(inventoryStorageLocation);
@@ -49,6 +51,7 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     {
         if (!Networking.IsOwner(gameObject)) return;
         if (!_isHoldingResource) return;
+        
         Debug.Log($"Storing {GatheredResourceAmount} {GatherableResourceTypeExtensions.GetName(_gatheredResource)}");
         inventory.AddItems(_gatheredResource, GatheredResourceAmount);
         _isHoldingResource = false;
@@ -58,18 +61,43 @@ public class PlayerWorkerUnit : UdonSharpBehaviour
     
     private void Start()
     {
+        Init();
+        HandleNullValues();
+    }
+
+    private void HandleNullValues()
+    {
+        if (inventory == null)
+        {
+            Debug.LogError("Inventory in PlayerWorkerUnit is null");
+        }
+
+        if (inventoryStorageLocation == null)
+        {
+            Debug.LogError("InventoryStorageLocation in PlayerWorkerUnit is null");
+        }
+
+        if (gatherableResourceData == null)
+        {
+            Debug.LogError("GatherableResourceData in PlayerWorkerUnit is null");
+        }
+    }
+
+    private void Init()
+    {
         _agent = GetComponent<NavMeshAgent>();
         _playerName = GetComponentInChildren<TMP_Text>();
         _playerName.text = Networking.GetOwner(gameObject).displayName;
         _agent.SetDestination(transform.position);
     }
-    
+
     private void SetTarget(Transform target)
     {
         if (_gatherOperation.IsActive)
         {
             _gatherOperation.Kill();
         }
+        
         if (target != null)
         {
             _agent.SetDestination(target.position);

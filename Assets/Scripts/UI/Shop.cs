@@ -7,7 +7,7 @@ using VRC.SDKBase;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class Shop : UdonSharpBehaviour
 {
-    [SerializeField] private GameObject tileChanger;
+    [SerializeField] private TileChanger tileChanger;
     [SerializeField] private PlayerInventory playerInventory;
 
     private readonly int[] _tileDestroyerPrice = { 1, 1 };
@@ -16,25 +16,35 @@ public class Shop : UdonSharpBehaviour
     public void SpawnTileDestroyer()
     {
         if (!playerInventory.TryToPay(_tileDestroyerPrice)) return;
-        SpawnTileChanger(TileType.None);
+        RespawnTileChanger(TileType.None);
     }
 
     public void SpawnTestTile()
     {
         if (!playerInventory.TryToPay(_testTilePrice)) return;
-        SpawnTileChanger(TileType.GrassyWoodenBench);
+        RespawnTileChanger(TileType.GrassyWoodenBench);
     }
-    
-    private void SpawnTileChanger(TileType tileType)
+
+    private void Start()
     {
-        TileChanger changer = tileChanger.GetComponent<TileChanger>();
-        if (changer != null)
+        HandleNullValues();
+    }
+
+    private void HandleNullValues()
+    {
+        if (tileChanger == null)
         {
-            changer.Init(Networking.GetOwner(gameObject), tileType, transform);
+            Debug.LogError($"TileChanger in Shop script is null");
+        }
+
+        if (playerInventory == null)
+        {
+            Debug.LogError($"PlayerInventory in Shop script is null");
         }
     }
 
-    private void Awake()
+    private void RespawnTileChanger(TileType tileType)
     {
+        tileChanger.Init(Networking.GetOwner(gameObject), tileType, transform);
     }
 }

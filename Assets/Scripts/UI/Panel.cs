@@ -19,7 +19,7 @@ public class Panel : UdonSharpBehaviour
 
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
-        UpdateOwnership();
+        HandleOwnership();
     }
 
     // not sure how to trigger an update when panel is activated so using this for now
@@ -55,22 +55,42 @@ public class Panel : UdonSharpBehaviour
         _showShopTab = !_showShopTab;
         UpdateActiveTab();
     }
+    
+    private void Start()
+    {
+        HandleNullValues();
+        UpdateResourcesDescription();
+        HandleOwnership();
+        RetrievePlayerWorker();
+        UpdateActiveTab();
+    }
 
-    private void UpdateOwnership()
+    private void HandleOwnership()
     {
         VRCPlayerApi owner = Networking.GetOwner(gameObject);
+        UpdateDebugDescription(owner);
+        SetObjectsActiveForLocalPlayer(owner.isLocal);
+    }
+
+    private void SetObjectsActiveForLocalPlayer(bool isLocal)
+    {
+        foreach (GameObject obj in activeOnlyForOwner)
+        {
+            obj.SetActive(isLocal);
+        }
+
+        foreach (GameObject obj in inactiveOnlyForOwner)
+        {
+            obj.SetActive(!isLocal);
+        }
+    }
+
+    private void UpdateDebugDescription(VRCPlayerApi owner)
+    {
         string local = owner.isLocal ? "(YOU!)" : "(Not you)";
         VRCPlayerApi inventoryOwner = Networking.GetOwner(playerInventory.gameObject);
         string inventoryLocal = inventoryOwner.isLocal ? "(YOU!)" : "(Not you)";
         currentOwnerDescription.text = $"Current Owner: {owner.displayName}{local}\nInventory Owner: {inventoryOwner.displayName}{inventoryLocal}";
-        foreach (GameObject obj in activeOnlyForOwner)
-        {
-            obj.SetActive(owner.isLocal);
-        }
-        foreach (GameObject obj in inactiveOnlyForOwner)
-        {
-            obj.SetActive(!owner.isLocal);
-        }
     }
 
     private void UpdateActiveTab()
@@ -78,17 +98,42 @@ public class Panel : UdonSharpBehaviour
         resourcesTab.SetActive(!_showShopTab);
         shopTab.SetActive(_showShopTab);
     }
-    
-    private void Start()
+
+    private void RetrievePlayerWorker()
     {
-        UpdateResourcesDescription();
-        UpdateOwnership();
         GameObject[] playerObjects = Networking.GetPlayerObjects(Networking.LocalPlayer);
         foreach (GameObject playerObject in playerObjects)
         {
             _playerWorker = playerObject.GetComponent<PlayerWorkerUnit>();
             if (_playerWorker != null) break;
         }
-        UpdateActiveTab();
+    }
+
+    private void HandleNullValues()
+    {
+        if (resourcesDescription == null)
+        {
+            Debug.LogError("ResourcesDescription in Panel script is null");
+        }
+
+        if (currentOwnerDescription == null)
+        {
+            Debug.LogError("CurrentOwnerDescription in Panel script is null");
+        }
+
+        if (playerInventory == null)
+        {
+            Debug.LogError("PlayerInventory in Panel script is null");
+        }
+
+        if (resourcesTab == null)
+        {
+            Debug.LogError("ResourcesTab in Panel script is null");
+        }
+        
+        if  (shopTab == null)
+        {
+            Debug.LogError("ShopTab in Panel script is null");
+        }
     }
 }

@@ -18,6 +18,7 @@ public class ManualObjectSync : UdonSharpBehaviour
     public void Sync()
     {
         if (!Networking.IsOwner(gameObject)) return;
+        
         _position = transform.position;
         _rotation = transform.rotation;
         RequestSerialization();
@@ -57,11 +58,16 @@ public class ManualObjectSync : UdonSharpBehaviour
 
     private void Awake()
     {
+        HandleNullValues();
+        _wasKinematic = rb.isKinematic;
+    }
+
+    private void HandleNullValues()
+    {
         if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
         }
-        _wasKinematic = rb.isKinematic;
     }
 
     private void Start()

@@ -21,8 +21,6 @@ public class TileManager : UdonSharpBehaviour
     private float _tileZSize;
     private float _startingXLocation;
     private float _startingZLocation;
-    private float _worldScaleX;
-    private float _worldScaleZ;
     // is this necessary here?
     private bool _restoreComplete;
     
@@ -112,27 +110,51 @@ public class TileManager : UdonSharpBehaviour
 
     private void Start()
     {
-        _worldScaleX = worldFloor.transform.localScale.x;
+        Init();
+        HandleNullValues();
+    }
+
+    private void HandleNullValues()
+    {
+        if (worldFloor == null)
+        {
+            Debug.LogError("World floor in TileManager script is null");
+        }
+
+        if (baseTilePrefab == null)
+        {
+            Debug.LogError("BaseTilePrefab in TileManager script is null");
+        }
+
+        if (grassyWoodenBenchPrefab == null)
+        {
+            Debug.LogError("GrassyWoodenBenchPrefab in TileManager script is null");
+        }
+    }
+
+    private void Init()
+    {
+        float worldScaleX = worldFloor.transform.localScale.x;
         // whyy
-        _worldScaleZ = worldFloor.transform.localScale.y;
+        float worldScaleZ = worldFloor.transform.localScale.y;
         
-        _maxXTiles = Mathf.FloorToInt(_worldScaleX / baseTilePrefab.transform.localScale.x);
-        _maxZTiles = Mathf.FloorToInt(_worldScaleZ / baseTilePrefab.transform.localScale.z);
+        _maxXTiles = Mathf.FloorToInt(worldScaleX / baseTilePrefab.transform.localScale.x);
+        _maxZTiles = Mathf.FloorToInt(worldScaleZ / baseTilePrefab.transform.localScale.z);
         _maxTiles = _maxXTiles * _maxZTiles;
         
-        Debug.Log($"Max tiles: {_maxXTiles}x{_maxZTiles}");
+        //Debug.Log($"Max tiles: {_maxXTiles}x{_maxZTiles}");
 
         _tileXSize = baseTilePrefab.transform.localScale.x;
         _tileZSize = baseTilePrefab.transform.localScale.z;
         
-        Debug.Log($"Tile size: {_tileXSize}x{_tileZSize}");
+        //Debug.Log($"Tile size: {_tileXSize}x{_tileZSize}");
 
         _startingXLocation =
-            worldFloor.transform.localPosition.x + (_worldScaleX - _tileXSize) / 2;
+            worldFloor.transform.localPosition.x + (worldScaleX - _tileXSize) / 2;
         _startingZLocation =
-            worldFloor.transform.localPosition.z + (_worldScaleZ - _tileZSize) / 2;
+            worldFloor.transform.localPosition.z + (worldScaleZ - _tileZSize) / 2;
         
-        Debug.Log($"Starting locations at {_startingXLocation}, {_startingZLocation}");
+        //Debug.Log($"Starting locations at {_startingXLocation}, {_startingZLocation}");
         
         _worldTilesObject = new Tile[_maxTiles];
     }

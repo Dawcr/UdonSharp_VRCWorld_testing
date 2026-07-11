@@ -69,6 +69,11 @@ public class TileChanger : UdonSharpBehaviour
         transform.position = _startingPosition;
     }
 
+    private void Start()
+    {
+        HandleNullValues();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!_active) return;
@@ -83,6 +88,31 @@ public class TileChanger : UdonSharpBehaviour
         }
     }
 
+    private void HandleNullValues()
+    {
+        if (box == null)
+        {
+            Debug.LogError($"Box in TileChanger is null");
+        }
+
+        if (spawner == null)
+        {
+            Debug.LogError($"Spawner in TileChanger is null");
+        }
+
+        if (pickup == null)
+        {
+            Debug.LogWarning($"Pickup in TileChanger is null, trying to GetComponent");
+            pickup = GetComponent<VRC_Pickup>();
+        }
+
+        if (rb == null)
+        {
+            Debug.LogWarning($"Rigidbody in TileChanger is null, trying to GetComponent");
+            rb = GetComponent<Rigidbody>();
+        }
+    }
+
     private void UpdateActiveState()
     {
         box.SetActive(!_active);
@@ -92,14 +122,7 @@ public class TileChanger : UdonSharpBehaviour
 
     private void UpdateSpawnerDescription()
     {
-        if (_active)
-        {
-            pickup.UseText = GetDescription();
-        }
-        else
-        {
-            pickup.UseText = $"Use to Activate: ({GetDescription()})";
-        }
+        pickup.UseText = _active ? GetDescription() : $"Use to Activate: ({GetDescription()})";
     }
 
     private string GetDescription()

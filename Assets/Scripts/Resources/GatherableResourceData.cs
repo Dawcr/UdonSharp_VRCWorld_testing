@@ -18,8 +18,31 @@ public class GatherableResourceData : UdonSharpBehaviour
             case GatherableResourceType.Stone:
                 return stoneLocation;
             default:
-                Debug.LogError("Unknown GatherableResourceType");
+                Debug.LogError("Unknown GatherableResourceType passed in");
                 return defaultLocation;
+        }
+    }
+
+    private void Start()
+    {
+        HandleNullValues();
+    }
+
+    private void HandleNullValues()
+    {
+        if (defaultLocation == null)
+        {
+            Debug.LogError("DefaultLocation in GatherableResourceData is null");
+        }
+
+        if (woodLocation == null)
+        {
+            Debug.LogError("WoodLocation in GatherableResourceData is null");
+        }
+
+        if (stoneLocation == null)
+        {
+            Debug.LogError("StoneLocation in GatherableResourceData is null");
         }
     }
 }

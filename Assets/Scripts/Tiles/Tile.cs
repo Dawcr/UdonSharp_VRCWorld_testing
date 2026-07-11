@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UdonSharp;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ public class Tile : UdonSharpBehaviour
     public bool TryChangeTileType(TileType newTileType)
     {
         if (newTileType == tileType) return false;
+        // only support demolishing and building on an empty tile
         if (tileType != TileType.None && newTileType != TileType.None) return false;
         
         tileType = newTileType;

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Components;
@@ -20,6 +21,7 @@ public class PlayerInventory : UdonSharpBehaviour
     private const string ExperienceDataName = "TotalExperience";
     private const int ExperiencePerLevel = 100;
     private const int ExperiencePerDonation = 2;
+    private bool _restoreComplete;
     
     public string GetInventoryContentDescription()
     {
@@ -48,14 +50,13 @@ public class PlayerInventory : UdonSharpBehaviour
     public bool TryRemoveItems(GatherableResourceType resource, int amount, int bonusExperienceIfSuccessful)
     {
         if (_gatheredResources[(int)resource] < amount) return false;
-        // stop autosave to avoid resource duplication shenanigans
+        
         StopAutoSave();
         _gatheredResources[(int)resource] -= amount;
         Debug.Log($"Removed {amount} {GatherableResourceTypeExtensions.GetName(resource)} from inventory");
         _experience += bonusExperienceIfSuccessful;
+        SaveAndScheduleNextAutoSave();
         panel.UpdateResourcesDescription();
-        Save();
-        ScheduleNextAutoSave();
         return true;
     }
 
@@ -79,9 +80,8 @@ public class PlayerInventory : UdonSharpBehaviour
         int expFromDonation = amount * ExperiencePerDonation;
         if (TryRemoveItems(resource, amount, expFromDonation))
         {
-            string name = targetPlayer.displayName;
             SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.Others, nameof(ReceiveDonation),
-                resource, amount, name);
+                resource, amount, targetPlayer.displayName);
         }
     }
 
@@ -89,13 +89,13 @@ public class PlayerInventory : UdonSharpBehaviour
     public void ReceiveDonation(GatherableResourceType resource, int amount, string targetPlayerName)
     {
         if (Networking.LocalPlayer.displayName != targetPlayerName) return; // is this really the best way?
+        
         StopAutoSave();
         AddItemsToInventory(resource, amount);
-        Save();
-        ScheduleNextAutoSave();
+        SaveAndScheduleNextAutoSave();
     }
 
-    public void AutoSave()
+    public void SaveAndScheduleNextAutoSave()
     {
         Save();
         ScheduleNextAutoSave();
@@ -110,22 +110,36 @@ public class PlayerInventory : UdonSharpBehaviour
             _gatheredResources[i] = PlayerData.GetInt(Networking.LocalPlayer, GatherableResourceTypeExtensions.GetName(i));
         }
         _experience = PlayerData.GetInt(Networking.LocalPlayer, ExperienceDataName);
+        _restoreComplete = true;
         panel.UpdateResourcesDescription();
         ScheduleNextAutoSave();
     }
 
+    private void Start()
+    {
+        HandleNullValues();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        //if (!Networking.IsOwner(other.gameObject)) return;
-        
         PlayerWorkerUnit worker = other.GetComponent<PlayerWorkerUnit>();
         if (worker == null) return;
         
         worker.DropResource();
     }
 
+    private void HandleNullValues()
+    {
+        if (panel == null)
+        {
+            Debug.LogError($"Panel in PlayerInventory is null");
+        }
+    }
+
     private void Save()
     {
+        if (!_restoreComplete) return;
+        
         Debug.Log("Saving");
         for (int i = 0; i < _gatheredResources.Length; i++)
         {
@@ -137,7 +151,7 @@ public class PlayerInventory : UdonSharpBehaviour
     private void ScheduleNextAutoSave()
     {
         StopAutoSave();
-        _autoSaveOperation = VRCTween.DelayedCall(this, nameof(AutoSave), AutoSaveTimer);
+        _autoSaveOperation = VRCTween.DelayedCall(this, nameof(SaveAndScheduleNextAutoSave), AutoSaveTimer);
     }
 
     private void StopAutoSave()
