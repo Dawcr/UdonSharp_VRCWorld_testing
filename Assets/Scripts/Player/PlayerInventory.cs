@@ -122,6 +122,8 @@ public class PlayerInventory : UdonSharpBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!Networking.IsOwner(other.gameObject)) return;
+        
         PlayerWorkerUnit worker = other.GetComponent<PlayerWorkerUnit>();
         if (worker == null) return;
         

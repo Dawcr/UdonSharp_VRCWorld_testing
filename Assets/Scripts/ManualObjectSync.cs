@@ -9,7 +9,7 @@ public class ManualObjectSync : UdonSharpBehaviour
     [SerializeField] private Rigidbody rb;
     [UdonSynced] private Vector3 _position;
     [UdonSynced] private Quaternion _rotation;
-    private const float SyncInterval = 0.11f;
+    private const float SyncInterval = 0.12f;
     private VRCTweenHandle _syncTween;
     private bool _wasKinematic;
     private VRCTweenHandle _positionTween;
@@ -22,7 +22,8 @@ public class ManualObjectSync : UdonSharpBehaviour
         _position = transform.position;
         _rotation = transform.rotation;
         RequestSerialization();
-        _syncTween = VRCTween.DelayedCall(this, nameof(Sync), SyncInterval);
+        
+        StartSynchronization();
     }
 
     public override void OnPickup()
@@ -33,7 +34,7 @@ public class ManualObjectSync : UdonSharpBehaviour
     public override void OnOwnershipTransferred(VRCPlayerApi player)
     {
         SetRemoteKinematic(player);
-        _syncTween = VRCTween.DelayedCall(this, nameof(Sync), SyncInterval);
+        StartSynchronization();
     }
 
     public override void OnDeserialization()
@@ -47,8 +48,25 @@ public class ManualObjectSync : UdonSharpBehaviour
             _rotationTween.Kill();
         }
         
-        _positionTween = gameObject.TweenPosition(_position, SyncInterval, VRCTweenEase.Linear);
-        _rotationTween = gameObject.TweenRotation(_rotation.eulerAngles, SyncInterval, VRCTweenEase.Linear);
+        if (transform.position != _position)
+        {
+            _positionTween = gameObject.TweenPosition(_position, SyncInterval, VRCTweenEase.None);
+        }
+        
+        if (transform.rotation != _rotation)
+        {
+            _rotationTween = gameObject.TweenRotation(_rotation.eulerAngles, SyncInterval, VRCTweenEase.None);
+        }
+    }
+    
+    private void StartSynchronization()
+    {
+        if (_syncTween.IsPlaying)
+        {
+            _syncTween.Kill();
+        }
+        
+        _syncTween = VRCTween.DelayedCall(this, nameof(Sync), SyncInterval);
     }
 
     private void SetRemoteKinematic(VRCPlayerApi player)
@@ -77,7 +95,7 @@ public class ManualObjectSync : UdonSharpBehaviour
     
     private void OnEnable()
     { 
-        _syncTween = VRCTween.DelayedCall(this, nameof(Sync), SyncInterval);
+        StartSynchronization();
     }
 
     private void OnDisable()
