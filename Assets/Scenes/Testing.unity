@@ -2341,11 +2341,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1016225591024498546, guid: 2e833411bb8e945409b55704f4b6c28f,
-        type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1094117294900135194, guid: 2e833411bb8e945409b55704f4b6c28f,
         type: 3}
       propertyPath: m_Name
@@ -2798,6 +2793,12 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 655655840708080840, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+    - target: {fileID: 6184409564996984176, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6184409564996984176, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
     - target: {fileID: 6283333836541388335, guid: 6a5e6d9be72cbeb43bc86da473a443c2,
         type: 3}
@@ -3465,13 +3466,13 @@ MonoBehaviour:
   useAssignedLayers: 0
   DynamicPrefabs: []
   DynamicMaterials:
-  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
   - {fileID: 2100000, guid: 2608c9140e5b81843aa967c2cd12a2a9, type: 2}
   - {fileID: 2100000, guid: 5598a53554c28954d8689549c0db2289, type: 2}
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: 9f6181d21c34e5047bc26aa3bfe8a6f2, type: 2}
-  - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
+  - {fileID: 2100000, guid: ae78e3502dcf2d7469bd93120b86f12c, type: 2}
   - {fileID: 2100000, guid: dc4fa4a233f3b0d4eb9ed6854866a44c, type: 2}
+  - {fileID: 2100000, guid: d73f30518ca49f444852eb6d42d774a0, type: 2}
   LightMapsNear: []
   LightMapsFar: []
   LightMode: 0
@@ -3546,6 +3547,7 @@ MonoBehaviour:
     ID: 14
     SerializedTypeNames:
     - VRC.SDK3.Components.VRCPlayerObject
+    - VRC.Udon.UdonBehaviour
     - VRC.Udon.UdonBehaviour
     - VRC.Udon.UdonBehaviour
   - gameObject: {fileID: 1188631198}

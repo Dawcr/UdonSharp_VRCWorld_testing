@@ -13,7 +13,6 @@ public class ManualObjectSync : UdonSharpBehaviour
     private const float SyncInterval = 0.11f;
     private VRCTweenHandle _syncTween;
     private VRCTweenHandle _positionTween;
-    private VRCTweenHandle _rotationTween;
     
     public void Sync()
     {
@@ -46,13 +45,9 @@ public class ManualObjectSync : UdonSharpBehaviour
         {
             _positionTween.Kill();
         }
-        if (_rotationTween.IsPlaying)
-        {
-            _rotationTween.Kill();
-        }
         
         _positionTween = gameObject.TweenPosition(_position, SyncInterval, VRCTweenEase.None);
-        _rotationTween = gameObject.TweenRotation(_rotation.eulerAngles, SyncInterval, VRCTweenEase.None);
+        transform.rotation = _rotation;
     }
     
     private void StartSynchronization()

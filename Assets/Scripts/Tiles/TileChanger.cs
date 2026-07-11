@@ -72,6 +72,9 @@ public class TileChanger : UdonSharpBehaviour
     private void Start()
     {
         HandleNullValues();
+        pickup.AutoHold = Networking.LocalPlayer.IsUserInVR()
+            ? VRC_Pickup.AutoHoldMode.No
+            : VRC_Pickup.AutoHoldMode.Yes;
     }
 
     private void OnTriggerEnter(Collider other)
