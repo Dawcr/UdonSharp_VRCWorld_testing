@@ -1,6 +1,4 @@
-﻿using System;
-using TMPro;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
@@ -10,10 +8,14 @@ public class Tile : UdonSharpBehaviour
     private TileManager _tileManager;
     private int _index;
 
-    public void Init(TileManager tileManager, int index)
+    public void Init(TileManager tileManager, int index, float rotation)
     {
         _tileManager = tileManager;
         _index = index;
+        if (rotation != 0)
+        {
+            transform.Rotate(0, rotation, 0);
+        }
     }
     
     public bool TryChangeTileType(TileType newTileType)
@@ -27,6 +29,14 @@ public class Tile : UdonSharpBehaviour
         return true;
     }
 
+    public bool Rotate90Degrees()
+    {
+        if (tileType == TileType.None) return false;
+           
+        _tileManager.RotateTile(_index);
+        return true;
+    }
+    
     public void GetReplaced()
     {
         if (_tileManager == null) return;

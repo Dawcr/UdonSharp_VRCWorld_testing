@@ -9,6 +9,7 @@ using VRC.SDKBase;
 public class OwnerTab : UdonSharpBehaviour
 {
     [SerializeField] private TMP_Dropdown dropdown;
+    // this smells error-prone hmm
     [SerializeField] private GameObject[] trackedObjects;
     
     private VRCPlayerApi[] _players;

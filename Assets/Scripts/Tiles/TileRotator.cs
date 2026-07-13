@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
 using VRC.SDKBase;
 
-public class TileChanger : TileTool
+public class TileRotator : TileTool
 {
-    public TileType TargetTile;
-    
-    public void Spawn(VRCPlayerApi currentMasterPlayer, TileType targetTile, Transform location)
+    public void Spawn(VRCPlayerApi currentMasterPlayer, Transform location)
     {
         Networking.SetOwner(currentMasterPlayer, gameObject);
-        Debug.Log($"Setting target tile {targetTile}");
-        TargetTile = targetTile;
         transform.position = location.position;
         SetInactive();
     }
@@ -22,7 +18,7 @@ public class TileChanger : TileTool
         Tile tile = other.GetComponent<Tile>();
         if (tile == null) return;
 
-        if (tile.TryChangeTileType(TargetTile))
+        if (tile.Rotate90Degrees())
         {
             SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(Respawn));
         }
@@ -30,12 +26,6 @@ public class TileChanger : TileTool
 
     protected override string GetDescription()
     {
-        switch (TargetTile)
-        {
-            case TileType.None:
-                return "Remove current tile";
-            default:
-                return "Testing";
-        }
+        return "Rotate the tile 90 degrees";
     }
 }

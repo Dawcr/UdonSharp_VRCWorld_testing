@@ -14,8 +14,10 @@ public class TileManager : UdonSharpBehaviour
     [SerializeField] private float tileZSize;
 
     [UdonSynced] private byte[] _worldTilesType;
+    [UdonSynced] private byte[] _worldTilesRotation;
     private Tile[] _worldTilesObject;
     private const string WorldTilesStringName = "WorldTiles";
+    private const string WorldTilesRotationStringName = "WorldTilesRotation";
     private int _maxXTiles;
     private int _maxZTiles;
     private int _maxTiles;
@@ -63,7 +65,15 @@ public class TileManager : UdonSharpBehaviour
         _worldTilesType[tileIndex] = (byte)tileType;
         RequestSerialization();
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(ChangeTilePrefab), tileIndex, (byte)tileType);
-        SaveTiles();
+        SaveTileTypes();
+    }
+
+    public void RotateTile(int tileIndex)
+    {
+        _worldTilesRotation[tileIndex] += 1; // 1 * 90 degrees clockwise
+        RequestSerialization();
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, nameof(RotateTileObject), tileIndex);
+        SaveTileRotations();
     }
 
     [NetworkCallable]
@@ -83,8 +93,20 @@ public class TileManager : UdonSharpBehaviour
         _worldTilesObject[tileIndex] = tile;
         if (tile != null)
         {
-            tile.Init(this, tileIndex);
+            tile.Init(this, tileIndex, 0);
         }
+    }
+
+    [NetworkCallable]
+    public void RotateTileObject(int tileIndex)
+    {
+        if (_worldTilesObject[tileIndex] == null)
+        {
+            Debug.Log("Tile not found");
+            return;
+        }
+        
+        _worldTilesObject[tileIndex].transform.Rotate(0, 90, 0);
     }
     
     public void SpawnInTiles()
@@ -100,9 +122,10 @@ public class TileManager : UdonSharpBehaviour
                 GameObject spawnedTile = Instantiate(tileToSpawn, location, Quaternion.identity);
                 Tile newTile = spawnedTile.GetComponent<Tile>();
                 _worldTilesObject[index] = newTile;
+                float rotation = (_worldTilesRotation[index] % 4) * 90f;
                 if (newTile != null)
                 {
-                    newTile.Init(this, index);
+                    newTile.Init(this, index, rotation);
                 }
             }
         }
@@ -161,19 +184,35 @@ public class TileManager : UdonSharpBehaviour
         
         if (!PlayerData.TryGetBytes(owner, WorldTilesStringName, out _worldTilesType))
         {
-            Debug.Log("No playerData recovered");
+            Debug.Log("No playerData for TileTypes recovered");
             _worldTilesType = new byte[_maxTiles];
         }
+
+        if (!PlayerData.TryGetBytes(owner, WorldTilesRotationStringName, out _worldTilesRotation))
+        {
+            Debug.Log("No playerData for TileRotations recovered");
+            _worldTilesRotation = new byte[_maxTiles];
+        }
+        
         RequestSerialization();
     }
 
-    private void SaveTiles()
+    private void SaveTileTypes()
     {
         if (!_restoreComplete) return;
         if (!Networking.IsOwner(gameObject)) return;
         
         PlayerData.SetBytes(WorldTilesStringName, _worldTilesType);
-        Debug.Log("Tiles saved");
+        Debug.Log("Tiles types saved");
+    }
+
+    private void SaveTileRotations()
+    {
+        if (!_restoreComplete) return;
+        if (!Networking.IsOwner(gameObject)) return;
+        
+        PlayerData.SetBytes(WorldTilesRotationStringName, _worldTilesRotation);
+        Debug.Log("Tile rotations saved");
     }
 
     private GameObject GetTile(TileType tileType)
